@@ -22,7 +22,7 @@ def average_slope_intercept(image, lines):
         parameters = np.polyfit((x1,x2), (y1, y2), 1) #np.polyfit() fits the first degree polynomial to x and y points abd returns the coefficients which describe m and c 
         slope = parameters[0]
         intercept = parameters[1]
-        if slope < 0: # if the slope in negative we'll apend it to the left  else on the right
+        if slope < 0: # if the slope in negative we'll append it to the left  else on the right
             left_fit.append((slope, intercept))
         else:
             right_fit.append((slope, intercept))
@@ -39,7 +39,7 @@ def average_slope_intercept(image, lines):
 
 def canny(image):
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY) # "cvtColor" converts the image from one color space to another
-    blur = cv2.GaussianBlur(gray, (5,5), 0) # (5,5) is the dimention of the kernel matrix used for smoothening the image
+    blur = cv2.GaussianBlur(gray, (5,5), 0) # (5,5) is the dimension of the kernel matrix used for smoothening the image
     canny = cv2.Canny(blur, 50, 150)
     return canny
 
@@ -56,27 +56,18 @@ def display_lines(image, lines):# image is the image on which the lines will be 
 
 
 def region_of_interest(image):
-    height = image.shape[0] #this correspons to the the row of the image, we're only traversing only along the height that is y-axis which corresponds to the height of image
+    height = image.shape[0] #this corresponds to the the row of the image, we're only traversing only along the height that is y-axis which corresponds to the height of image
     polygons = np.array([
-        [(200, height), (1100, height), (500, 250)] # this corresponds to an array of a singlr polygon
+        [(200, height), (1100, height), (500, 250)] # this corresponds to an array of a single polygon
          ])
-    mask = np.zeros_like(image) #mask is where our triangle will be on 
-    # np.zeros_like(image) creates 0 array of same  dimentions as  the dimentions of image
-    cv2.fillPoly(mask, polygons, 255) # fills the mask with the triangle, triangle having the intensit of 255
+    mask = np.zeros_like(image) #mask is where our polygon will be on 
+    # np.zeros_like(image) creates 0 array of same  dimensions as  the dimensions of image
+    cv2.fillPoly(mask, polygons, 255) # fills the mask with the polygon, polygon having the intensity of 255
     masked_image = cv2.bitwise_and(mask, image)
     return masked_image
 
 
-# image = cv2.imread('test_image.jpg')
-# lane_image = np.copy(image)
-# canny_image = canny(lane_image)
-# cropped_image = region_of_interest(canny_image)  
-# lines = cv2.HoughLinesP(cropped_image, 2, np.pi/180, 100,  minLineLength=40, maxLineGap=5)
-# averaged_lines = average_slope_intercept(lane_image, lines)
-# line_image = display_lines(lane_image, averaged_lines)
-# combo_image = cv2.addWeighted(lane_image, 0.8, line_image, 1, 1)
-# cv2.imshow('result', combo_image)
-# cv2.waitKey(0)
+
 
 cap = cv2.VideoCapture('test4.mp4')
 while(cap.isOpened()):
